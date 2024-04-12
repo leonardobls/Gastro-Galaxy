@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gastro_galaxy/pages/home.dart';
+import 'package:gastro_galaxy/pages/ingredients.dart';
+import 'package:gastro_galaxy/pages/recipes.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
@@ -21,7 +24,14 @@ class BottomBar extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/');
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) => const Home(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                );
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +53,14 @@ class BottomBar extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/ingredients');
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) => const Ingredients(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                );
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +82,14 @@ class BottomBar extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/recipes');
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) => const Recipes(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                );
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gastro_galaxy/components/bottom_bar.dart';
 
 class Ingredients extends StatefulWidget {
   const Ingredients({
@@ -21,6 +22,7 @@ class _IngredientsState extends State<Ingredients> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BottomBar(),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(

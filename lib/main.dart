@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         '/ingredients': (contex) => const Ingredients(),
         '/recipes': (contex) => const Recipes(),
       },
-      home: const Home(),
+      initialRoute: '/',
     );
   }
 }
