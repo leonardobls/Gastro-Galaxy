@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:gastro_galaxy/models/ingredient.dart';
 import 'package:gastro_galaxy/models/recipe.dart';
+import 'package:gastro_galaxy/models/user.dart';
 import 'package:gastro_galaxy/pages/ingredients.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
@@ -44,6 +45,14 @@ class Repository {
         rId INTEGER,
         FOREIGN KEY (iId) REFERENCES Ingredient(id),
         FOREIGN KEY (rId) REFERENCES Recipe(id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE User (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        isLogedIn BOOLEAN
       )
     ''');
   }
@@ -106,5 +115,15 @@ class Repository {
     await initDb();
 
     return await _db.update('Ingredient', ingredient.toJson(), where: 'id = ?', whereArgs: [ingredient.id]);
+  }
+
+  Future<int> insertUser (Map<String, dynamic> row) async {
+    await initDb();
+    return await _db.insert('User', row);
+  }
+
+  Future<int> updateIsLogedIn (User user) async {
+    await initDb();
+    return await _db.update('User', user.toJson(), where: 'id = ?', whereArgs: [user.id]);
   }
 }
