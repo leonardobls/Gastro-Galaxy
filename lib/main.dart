@@ -12,7 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final ThemeData myTheme = ThemeData(
     fontFamily: GoogleFonts.inter().fontFamily,
-    scaffoldBackgroundColor: AppStyles.backgroundColor,
+    scaffoldBackgroundColor: AppStyles.primaryColor,
   );
 
   MyApp({super.key});

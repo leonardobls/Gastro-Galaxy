@@ -2,32 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:gastro_galaxy/components/bottom_bar.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
 
-class Recipes extends StatefulWidget {
-  const Recipes({
+class Menu extends StatefulWidget {
+  const Menu({
     super.key,
   });
 
   @override
-  State<Recipes> createState() => _RecipesState();
+  State<Menu> createState() => _MenuState();
 }
 
-class _RecipesState extends State<Recipes> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class _MenuState extends State<Menu> {
+  void login() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomBar(),
       appBar: AppBar(
         backgroundColor: AppStyles.primaryColor,
-        title: const Text(
-          "Recipes Page",
+        title: const Text("Menu"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Container(),
