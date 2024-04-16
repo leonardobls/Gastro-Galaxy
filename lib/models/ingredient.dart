@@ -17,7 +17,7 @@ class Ingredient {
     return {
       'id': id,
       'name': name,
-      'isAvailable': isAvailable ? "true" : "false"
+      'isAvailable': isAvailable ? true : false
     };
   }
 }
