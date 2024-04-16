@@ -57,6 +57,11 @@ class Repository {
     ''');
   }
 
+  Future<int> linkIngredientToRecipe(int iId, int rId) async {
+    int res = await _db.insert('IngredientRecipe', {'iId': iId, 'rId': rId});
+    return res;
+  }
+
   Future<int> insertRecipe (Map<String, dynamic> row) async {
     await initDb();
     return await _db.insert('Recipe', row);
