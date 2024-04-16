@@ -98,7 +98,7 @@ class Repository {
   Future<Map<Recipe, List<Ingredient>>?> getRecipeWithIngredients(int recipeId) async {
     await initDb();
     List<Map> result = await _db.rawQuery('''
-      SELECT Recipe.id AS rId, Recipe.name AS rName,
+      SELECT Recipe.id AS rId, Recipe.name AS rName, Recipe.cId AS rcId,
              Ingredient.id AS iId, Ingredient.name AS iName, 
              Ingredient.isAvailable AS iIsAvailable
       FROM Recipe
@@ -116,6 +116,7 @@ class Repository {
         recipe ??= Recipe(
             id: row['rId'],
             name: row['rName'],
+            cId: row['rcId']
           );
 
         if (row['iId'] != null) {
