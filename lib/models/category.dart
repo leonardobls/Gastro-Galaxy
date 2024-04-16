@@ -1,15 +1,13 @@
-class Recipe {
+class Category {
   final int id;
   final String name;
-  late final int cId;
 
-  Recipe({required this.id, required this.name, cId});
+  Category({required this.id, required this.name});
 
-  factory Recipe.fromJson(Map<String, dynamic> json) {
-    return Recipe(
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
       id: json['id'],
       name: json['name'],
-      cId: json['cid']
    );
   }
 
