@@ -23,6 +23,7 @@ class Repository {
   }
 
   Future onCreate(Database db, int version) async {
+    await initDb();
     await _db.execute('''
     CREATE TABLE Recipe (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
