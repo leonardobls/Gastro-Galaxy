@@ -23,18 +23,17 @@ class Repository {
   }
 
   Future onCreate(Database db, int version) async {
-    await initDb();
-    await _db.execute('''
+    await db.execute('''
     CREATE TABLE Recipe (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT
     ) 
     ''');
 
-    await _db.execute('''
+    await db.execute('''
     CREATE TABLE Ingredient(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT
+      name TEXT,
       isAvailable BOOLEAN
     )
     ''');
@@ -114,7 +113,7 @@ class Repository {
 
   Future<int> insertIngredient (Map<String, dynamic> row) async {
     await initDb();
-    return await _db.insert('Ingredint', row);
+    return await _db.insert('Ingredient', row);
   }
 
   Future<int> updateIngredientAvailability (Ingredient ingredient) async {
