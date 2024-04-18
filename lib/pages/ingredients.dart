@@ -17,9 +17,9 @@ class _IngredientsState extends State<Ingredients> {
   var bdHelper = Repository();
   final List<Ingredient> _ingredients = [];
 
-  void insertIngredient(Ingredient ingredient) async {
-    var ingredientResponse = await bdHelper.insertIngredient(ingredient);
-  }
+  // void insertIngredient(Ingredient ingredient) async {
+  //   var ingredientResponse = await bdHelper.insertIngredient(ingredient);
+  // }
 
   // void getAllIngredients(Ingredient ingredient) async {
   //   var ingredientResponse = await bdHelper.ingred(ingredient);
