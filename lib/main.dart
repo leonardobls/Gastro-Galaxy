@@ -77,7 +77,6 @@ class _MainAppState extends State<MainApp> {
         '/': (contex) => const Home(),
         '/ingredients': (contex) => const Ingredients(),
         '/recipes': (contex) => const Recipes(),
-        '/recipes/{slug}': (contex) => const RecipesDetail(),
       },
       initialRoute: '/',
     );

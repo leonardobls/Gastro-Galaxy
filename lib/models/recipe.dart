@@ -1,11 +1,20 @@
+import 'package:gastro_galaxy/models/ingredient.dart';
+
 class Recipe {
-  final int id;
+  final int? id;
   final String name;
   final String description;
   final String imageUrl;
-  late final int cId;
+  final int? cId;
+  List<Ingredient>? ingredients;
 
-  Recipe({required this.id, required this.name, required this.description, required this.imageUrl, cId});
+  Recipe({
+    this.id,
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    this.cId,
+  });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
@@ -13,8 +22,8 @@ class Recipe {
       name: json['name'],
       cId: json['cid'],
       description: json['description'],
-      imageUrl: json['imageUrl']
-   );
+      imageUrl: json['imageUrl'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -23,7 +32,7 @@ class Recipe {
       'name': name,
       'cId': cId,
       'description': description,
-      'imageUrl': imageUrl
+      'imageUrl': imageUrl,
     };
   }
 }

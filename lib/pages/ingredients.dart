@@ -263,6 +263,8 @@ class _IngredientsState extends State<Ingredients> {
             ingredientImageController.text = existingIngredient.imageUrl;
             isChecked = existingIngredient.isAvailable;
           });
+        } else {
+          cleanIngredientForm();
         }
         return SafeArea(
           child: SizedBox(
@@ -270,11 +272,11 @@ class _IngredientsState extends State<Ingredients> {
             height: MediaQuery.of(context).size.height * 0.7,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 40, bottom: 50),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40, bottom: 50),
                   child: Text(
-                    "Adicionar Ingrediente",
-                    style: TextStyle(
+                    existingIngredient != null ? "Editar Ingrediente" : "Adicionar Ingrediente",
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -499,7 +501,6 @@ class _IngredientsState extends State<Ingredients> {
                                       isAvailable: isChecked,
                                     ),
                                   );
-
                                   cleanIngredientForm();
                                   Navigator.pop(context);
                                 },

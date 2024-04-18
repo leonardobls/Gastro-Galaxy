@@ -2,10 +2,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:gastro_galaxy/components/bottom_bar.dart';
+import 'package:gastro_galaxy/db/database.dart';
+import 'package:gastro_galaxy/models/ingredient.dart';
+import 'package:gastro_galaxy/models/recipe.dart';
 
 class RecipesDetail extends StatefulWidget {
+  final int id;
+
   const RecipesDetail({
     super.key,
+    required this.id,
   });
 
   @override
@@ -13,6 +19,24 @@ class RecipesDetail extends StatefulWidget {
 }
 
 class _RecipesDetailState extends State<RecipesDetail> {
+  var bdHelper = Repository();
+  late Recipe? recipeResponse;
+
+  void getRecipe() async {
+    recipeResponse = await bdHelper.getRecipeWithIngredients(widget.id);
+
+    // setState(() {
+    //   _recipe = recipeResponse!["Recipe"] as Recipe;
+    // });
+    var teste = 0;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getRecipe();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

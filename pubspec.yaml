@@ -74,6 +74,7 @@ flutter:
     - assets/icons/logout.svg
     - assets/icons/info.svg
     - assets/icons/star.svg
+    - assets/icons/edit.svg
     - assets/icons/add.svg
 
 

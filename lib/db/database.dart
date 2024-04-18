@@ -44,6 +44,8 @@ class Repository {
     CREATE TABLE Recipe (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
+      description TEXT,
+      imageUrl TEXT,
       cId INTEGER,
       FOREIGN KEY (cId) REFERENCES Category(id) 
     ) 
@@ -94,51 +96,42 @@ class Repository {
     return await _db.delete('Recipe');
   }
 
-  Future<Map<Recipe, List<Ingredient>>?> getRecipeWithIngredients(int recipeId) async {
+  Future<Recipe?> getRecipeWithIngredients(int recipeId) async {
     await initDb();
-    List<Map> result = await _db.rawQuery('''
-      SELECT Recipe.id AS rId, Recipe.name AS rName, Recipe.cId AS rcId, 
-             Recipe.description AS rDescription, Recipe.imageUrl AS rImageUrl,
-             Ingredient.id AS iId, Ingredient.name AS iName, 
-             Ingredient.isAvailable AS iIsAvailable
-      FROM Recipe
-      LEFT JOIN IngredientRecipe ON Recipe.id = IngredientRecipe.rId
-      LEFT JOIN Ingredient ON IngredientRecipe.iId = Ingredient.id
-      WHERE Recipe.id = ?
-    ''', [recipeId]);
+    final List<Map<String, Object?>> result = await _db.query('Recipe', where: 'id', whereArgs: [recipeId]);
 
     if (result.isNotEmpty) {
-      Map<Recipe, List<Ingredient>> recipesWithIngredients = {};
-      Recipe? recipe;
+      Recipe recipe = Recipe(
+        id: result[0]['id'] as int,
+        name: result[0]['name'] as String,
+        cId: result[0]['cId'] as int,
+        description: result[0]['description'] as String,
+        imageUrl: result[0]['imageUrl'] as String,
+      );
+
+      final List<Map<String, Object?>> teste = await _db.query('IngredientRecipe', where: 'rId', whereArgs: [recipeId]);
+
+      final List<Map> ingredientsResult = await _db.rawQuery('''
+        SELECT Ingredient.id, Ingredient.name
+        FROM Ingredient
+        INNER JOIN IngredientRecipe ON Ingredient.id = IngredientRecipe.iId WHERE IngredientRecipe.rId = $recipeId
+      ''');
+
       List<Ingredient> ingredients = [];
 
-      for (var row in result) {
-        recipe ??= Recipe(
-          id: row['rId'],
-          name: row['rName'],
-          cId: row['rcId'],
-          description: row['rDescription'],
-          imageUrl: row['rImageUrl'],
-        );
+      // if (row['iId'] != null) {
+      //   ingredients.add(
+      //     Ingredient(
+      //       id: row['itemId'],
+      //       name: row['itemName'],
+      //       amount: row['itemAmount'],
+      //       imageUrl: row['itemImageUrl'],
+      //       isAvailable: row['isAvailable'],
+      //     ),
+      //   );
+      // }
 
-        if (row['iId'] != null) {
-          ingredients.add(
-            Ingredient(
-              id: row['itemId'],
-              name: row['itemName'],
-              amount: row['itemAmount'],
-              imageUrl: row['itemImageUrl'],
-              isAvailable: row['isAvailable'],
-            ),
-          );
-        } else {
-          recipesWithIngredients[recipe] = ingredients;
-        }
-      }
-
-      return recipesWithIngredients;
-    } else {
-      return null;
+      return recipe;
     }
   }
 
@@ -199,6 +192,33 @@ class Repository {
     return recipesByCategory;
   }
 
+  Future<List<Recipe>> getAllRecipes() async {
+    await initDb();
+    final List<Map<String, Object?>> result = await _db.query('Recipe');
+
+    List<Recipe> recipes = [];
+
+    if (result.isNotEmpty) {
+      for (var row in result) {
+        Recipe recipe = Recipe(
+          id: row['id'] as int,
+          name: row['name'] as String,
+          description: row['description'] as String,
+          imageUrl: row['imageUrl'] as String,
+          cId: row['cId'] as int,
+        );
+
+        recipes.add(recipe);
+      }
+    }
+    return recipes;
+  }
+
+  Future<int> removeAllRecipesIngredientsRelated(int recipeId) async {
+    await initDb();
+    return await _db.delete('IngredientRecipe', where: 'rId = ?', whereArgs: [recipeId]);
+  }
+
   Future<int> insertIngredient(Map<String, dynamic> row) async {
     await initDb();
     return await _db.insert('Ingredient', row);
@@ -210,10 +230,22 @@ class Repository {
     return await _db.update('Ingredient', row, where: 'id = ?', whereArgs: [row['id']]);
   }
 
+  Future<int> updateRecipe(Map<String, dynamic> row) async {
+    await initDb();
+
+    return await _db.update('Ingredient', row, where: 'id = ?', whereArgs: [row['id']]);
+  }
+
   Future<int> deleteIngredient(Map<String, dynamic> row) async {
     await initDb();
 
     return await _db.delete('Ingredient', where: 'id = ?', whereArgs: [row['id']]);
+  }
+
+  Future<int> deleteRecipe(int recipeId) async {
+    await initDb();
+
+    return await _db.delete('Recipe', where: 'id = ?', whereArgs: [recipeId]);
   }
 
   Future<int> insertUser(Map<String, dynamic> row) async {
