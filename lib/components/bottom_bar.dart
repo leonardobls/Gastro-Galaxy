@@ -6,9 +6,16 @@ import 'package:gastro_galaxy/pages/ingredients.dart';
 import 'package:gastro_galaxy/pages/menu.dart';
 import 'package:gastro_galaxy/pages/recipes.dart';
 
-class BottomBar extends StatelessWidget {
-  const BottomBar({super.key});
+class BottomBar extends StatefulWidget {
+  const BottomBar({
+    super.key,
+  });
 
+  @override
+  State<BottomBar> createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -34,14 +41,9 @@ class BottomBar extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) => const Home(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    );
+                    if (ModalRoute.of(context)!.settings.name != "/") {
+                      Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false);
+                    }
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -64,14 +66,12 @@ class BottomBar extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) => const Ingredients(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    );
+                    if (ModalRoute.of(context)!.settings.name != "/ingredients") {
+                      Navigator.pushNamed(
+                        context,
+                        '/ingredients',
+                      );
+                    }
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -80,12 +80,12 @@ class BottomBar extends StatelessWidget {
                         "assets/icons/ingredientes.svg",
                         width: 30,
                         height: 30,
-                        color: ModalRoute.of(context)!.settings.name == "/ingredientes" ? AppStyles.primaryColor : Colors.white,
+                        color: ModalRoute.of(context)!.settings.name == "/ingredients" ? AppStyles.primaryColor : Colors.white,
                       ),
                       Text(
                         "INGREDIENTES",
                         style: TextStyle(
-                          color: ModalRoute.of(context)!.settings.name == "/ingredientes" ? AppStyles.primaryColor : Colors.white,
+                          color: ModalRoute.of(context)!.settings.name == "/ingredients" ? AppStyles.primaryColor : Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -94,14 +94,12 @@ class BottomBar extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) => const Recipes(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    );
+                    if (ModalRoute.of(context)!.settings.name != "/recipes") {
+                      Navigator.pushNamed(
+                        context,
+                        '/recipes',
+                      );
+                    }
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -110,12 +108,12 @@ class BottomBar extends StatelessWidget {
                         "assets/icons/receitas.svg",
                         width: 30,
                         height: 30,
-                        color: ModalRoute.of(context)!.settings.name == "/receitas" ? AppStyles.primaryColor : Colors.white,
+                        color: ModalRoute.of(context)!.settings.name == "/recipes" ? AppStyles.primaryColor : Colors.white,
                       ),
                       Text(
                         "RECEITAS",
                         style: TextStyle(
-                          color: ModalRoute.of(context)!.settings.name == "/receitas" ? AppStyles.primaryColor : Colors.white,
+                          color: ModalRoute.of(context)!.settings.name == "/recipes" ? AppStyles.primaryColor : Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -69,12 +69,31 @@ flutter:
     - assets/icons/receitas.svg
     - assets/icons/menu.svg
     - assets/icons/back_arrow.svg
+    - assets/icons/profile.svg
+    - assets/icons/contact.svg
+    - assets/icons/logout.svg
+    - assets/icons/info.svg
+    - assets/icons/star.svg
 
 
     - assets/images/logo.png
     - assets/images/banner-image.png
     - assets/images/receitas.png
     - assets/images/ingredientes.png
+    - assets/images/peixe.png
+    - assets/images/carne.png
+    - assets/images/pizza.png
+    - assets/images/sobremesa.png
+    - assets/images/hamburguer.png
+
+    - assets/images/ing-arroz.png
+    - assets/images/ing-farinha.png
+    - assets/images/ing-feijao.png
+    - assets/images/ing-leite.png
+    - assets/images/ing-massa.png
+    - assets/images/ing-pao.png
+    - assets/images/ing-queijo.png
+    - assets/images/ing-tomate.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
