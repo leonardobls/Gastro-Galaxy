@@ -35,13 +35,13 @@ class Repository {
     await db.execute('''CREATE TABLE Category (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT
-    )
+      )
     ''');
 
-    await db.execute('INSERT INTO Category VALUES (1, Pizzas)');
-    await db.execute('INSERT INTO Category VALUES (2, Hamburgers)');
-    await db.execute('INSERT INTO Category VALUES (3, Massas)');
-    await db.execute('INSERT INTO Category VALUES (4, Bolos)');
+    await db.execute('INSERT INTO Category (id, name) VALUES (1, \'Pizzas\')');
+    await db.execute('INSERT INTO Category (id, name) VALUES (2, \'Hamburgers\')');
+    await db.execute('INSERT INTO Category (id, name) VALUES (3, \'Massas\')');
+    await db.execute('INSERT INTO Category (id, name) VALUES (4, \'Bolos\')');
 
     await db.execute('''
     CREATE TABLE Recipe (
@@ -98,7 +98,8 @@ class Repository {
   Future<Map<Recipe, List<Ingredient>>?> getRecipeWithIngredients(int recipeId) async {
     await initDb();
     List<Map> result = await _db.rawQuery('''
-      SELECT Recipe.id AS rId, Recipe.name AS rName, Recipe.cId AS rcId,
+      SELECT Recipe.id AS rId, Recipe.name AS rName, Recipe.cId AS rcId, 
+             Recipe.description AS rDescription, Recipe.imageUrl AS rImageUrl,
              Ingredient.id AS iId, Ingredient.name AS iName, 
              Ingredient.isAvailable AS iIsAvailable
       FROM Recipe
@@ -116,7 +117,9 @@ class Repository {
         recipe ??= Recipe(
             id: row['rId'],
             name: row['rName'],
-            cId: row['rcId']
+            cId: row['rcId'],
+            description: row['rDescription'],
+            imageUrl: row['rImageUrl']
           );
 
         if (row['iId'] != null) {
@@ -167,6 +170,7 @@ class Repository {
     await initDb();
     List<Map> result = await _db.rawQuery('''
       SELECT Recipe.id AS rId, Recipe.name AS rName, Recipe.cId AS cId,
+             Recipe.description AS rDescription, Recipe.imageUrl AS rImageUrl,
              Category.name AS cName
       FROM Recipe
       INNER JOIN Category ON Recipe.cId = Category.id
@@ -179,7 +183,9 @@ class Repository {
         String categoryName = row['cName'];
         Recipe recipe = Recipe(
           id: row['rId'],
-          name: row['rName']
+          name: row['rName'],
+          description: row['rDescription'],
+          imageUrl: row['rImageUrl']
         );
 
         if (recipesByCategory.containsKey(categoryName)) {
