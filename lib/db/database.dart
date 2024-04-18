@@ -3,7 +3,6 @@ import 'package:gastro_galaxy/models/category.dart';
 import 'package:gastro_galaxy/models/ingredient.dart';
 import 'package:gastro_galaxy/models/recipe.dart';
 import 'package:gastro_galaxy/models/user.dart';
-import 'package:gastro_galaxy/pages/ingredients.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
@@ -53,6 +52,8 @@ class Repository {
     CREATE TABLE Ingredient(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
+      amount TEXT,
+      imageUrl TEXT,
       isAvailable BOOLEAN
     )
     ''');
@@ -111,10 +112,24 @@ class Repository {
       List<Ingredient> ingredients = [];
 
       for (var row in result) {
-        recipe ??= Recipe(id: row['rId'], name: row['rName'], cId: row['rcId'], description: row['rDescription'], imageUrl: row['rImageUrl']);
+        recipe ??= Recipe(
+          id: row['rId'],
+          name: row['rName'],
+          cId: row['rcId'],
+          description: row['rDescription'],
+          imageUrl: row['rImageUrl'],
+        );
 
         if (row['iId'] != null) {
-          ingredients.add(Ingredient(id: row['itemId'], name: row['itemName'], isAvailable: row['isAvailable']));
+          ingredients.add(
+            Ingredient(
+              id: row['itemId'],
+              name: row['itemName'],
+              amount: row['itemAmount'],
+              imageUrl: row['itemImageUrl'],
+              isAvailable: row['isAvailable'],
+            ),
+          );
         } else {
           recipesWithIngredients[recipe] = ingredients;
         }
@@ -143,9 +158,18 @@ class Repository {
   Future<List<Ingredient>> getIngredients() async {
     await initDb();
 
-    final List<Map<String, Object?>> ingredients = await _db.query('Category');
+    final List<Map<String, Object?>> ingredients = await _db.query('Ingredient');
 
-    return [for (final {'id': id as int, 'name': name as String, 'isAvailable': isAvailable as bool} in ingredients) Ingredient(id: id, name: name, isAvailable: isAvailable)];
+    return [
+      for (final {'id': id as int, 'name': name as String, 'amount': amount as String, 'image': imageUrl as String, 'isAvailable': isAvailable as int} in ingredients)
+        Ingredient(
+          id: id,
+          name: name,
+          amount: amount,
+          imageUrl: imageUrl,
+          isAvailable: isAvailable == 1 ? true : false,
+        ),
+    ];
   }
 
   Future<Map<String, List<Recipe>>> getRecipesByCategory() async {
