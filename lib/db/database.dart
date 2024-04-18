@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:gastro_galaxy/models/category.dart';
 import 'package:gastro_galaxy/models/ingredient.dart';
 import 'package:gastro_galaxy/models/recipe.dart';
@@ -159,15 +160,14 @@ class Repository {
     await initDb();
 
     final List<Map<String, Object?>> ingredients = await _db.query('Ingredient');
-
     return [
-      for (final {'id': id as int, 'name': name as String, 'amount': amount as String, 'image': imageUrl as String, 'isAvailable': isAvailable as int} in ingredients)
+      for (final ing in ingredients)
         Ingredient(
-          id: id,
-          name: name,
-          amount: amount,
-          imageUrl: imageUrl,
-          isAvailable: isAvailable == 1 ? true : false,
+          id: ing["id"] as int,
+          name: ing["name"] as String,
+          amount: ing["amount"] as String,
+          imageUrl: ing["imageUrl"] as String,
+          isAvailable: ing["isAvailable"] == 1 ? true : false,
         ),
     ];
   }
@@ -204,10 +204,16 @@ class Repository {
     return await _db.insert('Ingredient', row);
   }
 
-  Future<int> updateIngredientAvailability(Ingredient ingredient) async {
+  Future<int> updateIngredient(Map<String, dynamic> row) async {
     await initDb();
 
-    return await _db.update('Ingredient', ingredient.toJson(), where: 'id = ?', whereArgs: [ingredient.id]);
+    return await _db.update('Ingredient', row, where: 'id = ?', whereArgs: [row['id']]);
+  }
+
+  Future<int> deleteIngredient(Map<String, dynamic> row) async {
+    await initDb();
+
+    return await _db.delete('Ingredient', where: 'id = ?', whereArgs: [row['id']]);
   }
 
   Future<int> insertUser(Map<String, dynamic> row) async {
