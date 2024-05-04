@@ -158,94 +158,96 @@ class _IngredientsState extends State<Ingredients> {
             width: double.infinity,
             color: Colors.white,
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _ingredients.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            useRootNavigator: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
+              child: _ingredients.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _ingredients.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              useRootNavigator: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
                               ),
-                            ),
-                            backgroundColor: AppStyles.primaryColor,
-                            builder: (BuildContext context) {
-                              return editModal(_ingredients[index]);
-                            },
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 130,
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    _ingredients[index].imageUrl,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Opacity(
-                                    opacity: 0.7,
-                                    child: Container(
+                              backgroundColor: AppStyles.primaryColor,
+                              builder: (BuildContext context) {
+                                return editModal(_ingredients[index]);
+                              },
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 130,
+                                child: Stack(
+                                  children: [
+                                    Image.network(
+                                      _ingredients[index].imageUrl,
                                       width: double.infinity,
                                       height: double.infinity,
-                                      color: Colors.black54,
+                                      fit: BoxFit.cover,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          _ingredients[index].name,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          _ingredients[index].amount,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
+                                    Opacity(
+                                      opacity: 0.7,
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        color: Colors.black54,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            _ingredients[index].name,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            _ingredients[index].amount,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
+                    )
+                  : const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Text("Nenhum ingrediente foi cadastrado."),
+                      ),
                     ),
-                  ),
-                ],
-              ),
             ),
           ),
         ),
@@ -275,7 +277,9 @@ class _IngredientsState extends State<Ingredients> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40, bottom: 50),
                   child: Text(
-                    existingIngredient != null ? "Editar Ingrediente" : "Adicionar Ingrediente",
+                    existingIngredient != null
+                        ? "Editar Ingrediente"
+                        : "Adicionar Ingrediente",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -477,7 +481,8 @@ class _IngredientsState extends State<Ingredients> {
                                 ),
                                 child: Container(
                                   color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 20),
                                   child: const Text(
                                     "SALVAR",
                                     style: TextStyle(
@@ -510,7 +515,8 @@ class _IngredientsState extends State<Ingredients> {
                                   ),
                                   child: Container(
                                     color: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40, vertical: 20),
                                     child: const Text(
                                       "DELETAR",
                                       style: TextStyle(
