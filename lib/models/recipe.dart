@@ -4,25 +4,25 @@ class Recipe {
   final int? id;
   final String name;
   final String description;
-  final String imageUrl;
-  final int? cId;
+  final String url;
+  final int? categoryId;
   List<Ingredient>? ingredients;
 
   Recipe({
     this.id,
     required this.name,
     required this.description,
-    required this.imageUrl,
-    this.cId,
+    required this.url,
+    this.categoryId,
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
       id: json['id'],
       name: json['name'],
-      cId: json['cid'],
+      categoryId: json['categoryId'],
       description: json['description'],
-      imageUrl: json['imageUrl'],
+      url: json['url'],
     );
   }
 
@@ -30,9 +30,9 @@ class Recipe {
     return {
       'id': id,
       'name': name,
-      'cId': cId,
+      'categoryId': categoryId,
       'description': description,
-      'imageUrl': imageUrl,
+      'imageUrl': url,
     };
   }
 }

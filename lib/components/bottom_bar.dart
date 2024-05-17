@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
-import 'package:gastro_galaxy/pages/home.dart';
-import 'package:gastro_galaxy/pages/ingredients.dart';
 import 'package:gastro_galaxy/pages/menu.dart';
-import 'package:gastro_galaxy/pages/recipes.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({

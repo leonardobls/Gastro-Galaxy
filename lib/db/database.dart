@@ -104,9 +104,9 @@ class Repository {
       Recipe recipe = Recipe(
         id: result[0]['id'] as int,
         name: result[0]['name'] as String,
-        cId: result[0]['cId'] as int,
+        categoryId: result[0]['cId'] as int,
         description: result[0]['description'] as String,
-        imageUrl: result[0]['imageUrl'] as String,
+        url: result[0]['imageUrl'] as String,
       );
 
       final List<Map<String, Object?>> teste = await _db.query('IngredientRecipe', where: 'rId', whereArgs: [recipeId]);
@@ -180,7 +180,7 @@ class Repository {
     if (result.isNotEmpty) {
       for (var row in result) {
         String categoryName = row['cName'];
-        Recipe recipe = Recipe(id: row['rId'], name: row['rName'], description: row['rDescription'], imageUrl: row['rImageUrl']);
+        Recipe recipe = Recipe(id: row['rId'], name: row['rName'], description: row['rDescription'], url: row['rImageUrl']);
 
         if (recipesByCategory.containsKey(categoryName)) {
           recipesByCategory[categoryName]?.add(recipe);
@@ -204,8 +204,8 @@ class Repository {
           id: row['id'] as int,
           name: row['name'] as String,
           description: row['description'] as String,
-          imageUrl: row['imageUrl'] as String,
-          cId: row['cId'] as int,
+          url: row['imageUrl'] as String,
+          categoryId: row['cId'] as int,
         );
 
         recipes.add(recipe);

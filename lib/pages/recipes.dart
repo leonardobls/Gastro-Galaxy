@@ -7,6 +7,7 @@ import 'package:gastro_galaxy/config/app_styles.dart';
 import 'package:gastro_galaxy/db/database.dart';
 import 'package:gastro_galaxy/models/recipe.dart';
 import 'package:gastro_galaxy/pages/recipes_detail.dart';
+import 'package:gastro_galaxy/stores/recipe_store.dart';
 
 class Recipes extends StatefulWidget {
   const Recipes({
@@ -18,76 +19,11 @@ class Recipes extends StatefulWidget {
 }
 
 class _RecipesState extends State<Recipes> {
-  GlobalKey<FormState> recipesFormKey = GlobalKey<FormState>();
-  TextEditingController recipesNameController = TextEditingController();
-  TextEditingController recipesDescriptionController = TextEditingController();
-  TextEditingController recipesImageController = TextEditingController();
-  bool isChecked = false;
-
-  var bdHelper = Repository();
-  final List<Recipe> _recipes = [];
-
-  void insertRecipe(Recipe recipe, List<int> ingredientsIdList) async {
-    Map<String, dynamic> row = {
-      "name": recipe.name,
-      "description": recipe.description,
-      "imageUrl": recipe.imageUrl,
-      "cId": recipe.cId,
-    };
-    var recipeId = await bdHelper.insertRecipe(row);
-
-    for (var ingredientId in ingredientsIdList) {
-      await bdHelper.linkIngredientToRecipe(ingredientId, recipeId);
-    }
-
-    getAllRecipes();
-  }
-
-  void getAllRecipes() async {
-    var recipeResponse = await bdHelper.getAllRecipes();
-    setState(() {
-      _recipes.clear();
-      _recipes.addAll(recipeResponse);
-    });
-  }
-
-  void editRecipe(Recipe recipe, List<int> ingredientsIdList) async {
-    Map<String, dynamic> row = {
-      "id": recipe.id,
-      "name": recipe.name,
-      "description": recipe.description,
-      "imageUrl": recipe.imageUrl,
-    };
-
-    var recipeId = await bdHelper.updateRecipe(row);
-
-    await bdHelper.removeAllRecipesIngredientsRelated(recipe.id!);
-
-    for (var ingredientId in ingredientsIdList) {
-      await bdHelper.linkIngredientToRecipe(ingredientId, recipeId);
-    }
-
-    getAllRecipes();
-  }
-
-  void removeRecipe(int recipeId, List<int> ingredientsIdList) async {
-    await bdHelper.removeAllRecipesIngredientsRelated(recipeId);
-    await bdHelper.deleteRecipe(recipeId);
-
-    getAllRecipes();
-  }
-
-  void cleanRecipeForm() {
-    recipesNameController.clear();
-    recipesDescriptionController.clear();
-    recipesImageController.clear();
-    isChecked = false;
-  }
+  final RecipeStore recipeStore = RecipeStore();
 
   @override
   void initState() {
     super.initState();
-    getAllRecipes();
   }
 
   @override
@@ -113,21 +49,21 @@ class _RecipesState extends State<Recipes> {
             ),
             InkWell(
               onTap: () {
-                // showModalBottomSheet(
-                //   context: context,
-                //   isScrollControlled: true,
-                //   useRootNavigator: true,
-                //   shape: const RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(20),
-                //       topRight: Radius.circular(20),
-                //     ),
-                //   ),
-                //   backgroundColor: AppStyles.primaryColor,
-                //   builder: (BuildContext context) {
-                //     return editModal(null);
-                //   },
-                // );
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useRootNavigator: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  backgroundColor: AppStyles.primaryColor,
+                  builder: (BuildContext context) {
+                    return editModal(null);
+                  },
+                );
               },
               child: SvgPicture.asset(
                 "assets/icons/add.svg",
@@ -162,12 +98,12 @@ class _RecipesState extends State<Recipes> {
             width: double.infinity,
             color: Colors.white,
             child: SingleChildScrollView(
-              child: _recipes.isNotEmpty
+              child: recipeStore.recipes.isNotEmpty
                   ? Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _recipes.length,
+                        itemCount: recipeStore.recipes.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return Column(
@@ -183,7 +119,7 @@ class _RecipesState extends State<Recipes> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => RecipesDetail(id: _recipes[index].id!),
+                                            builder: (context) => RecipesDetail(id: recipeStore.recipes[index].id!),
                                           ),
                                         );
                                       },
@@ -193,7 +129,7 @@ class _RecipesState extends State<Recipes> {
                                           width: 80,
                                           height: 80,
                                           child: Image.network(
-                                            _recipes[index].imageUrl,
+                                            recipeStore.recipes[index].url,
                                             width: double.infinity,
                                             height: double.infinity,
                                             fit: BoxFit.cover,
@@ -210,7 +146,7 @@ class _RecipesState extends State<Recipes> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => RecipesDetail(id: _recipes[index].id!),
+                                              builder: (context) => RecipesDetail(id: recipeStore.recipes[index].id!),
                                             ),
                                           );
                                         },
@@ -218,7 +154,7 @@ class _RecipesState extends State<Recipes> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              _recipes[index].name,
+                                              recipeStore.recipes[index].name,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -227,7 +163,7 @@ class _RecipesState extends State<Recipes> {
                                               height: 10,
                                             ),
                                             Text(
-                                              _recipes[index].description,
+                                              recipeStore.recipes[index].description,
                                             ),
                                           ],
                                         ),
@@ -250,7 +186,7 @@ class _RecipesState extends State<Recipes> {
                                           ),
                                           backgroundColor: AppStyles.primaryColor,
                                           builder: (BuildContext context) {
-                                            return editModal(_recipes[index]);
+                                            return editModal(recipeStore.recipes[index]);
                                           },
                                         );
                                       },
@@ -301,12 +237,10 @@ class _RecipesState extends State<Recipes> {
       builder: (BuildContext context, StateSetter setState) {
         if (existingRecipe != null) {
           setState(() {
-            recipesNameController.text = existingRecipe.name;
-            recipesDescriptionController.text = existingRecipe.description;
-            recipesImageController.text = existingRecipe.imageUrl;
+            recipeStore.recipesNameController.text = existingRecipe.name;
+            recipeStore.recipesDescriptionController.text = existingRecipe.description;
+            recipeStore.recipesImageController.text = existingRecipe.url;
           });
-        } else {
-          cleanRecipeForm();
         }
         return SafeArea(
           child: SizedBox(
@@ -329,7 +263,7 @@ class _RecipesState extends State<Recipes> {
                   ),
                 ),
                 Form(
-                  key: recipesFormKey,
+                  key: recipeStore.recipesFormKey,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,
@@ -349,7 +283,7 @@ class _RecipesState extends State<Recipes> {
                           height: 15,
                         ),
                         TextFormField(
-                          controller: recipesNameController,
+                          controller: recipeStore.recipesNameController,
                           cursorColor: Colors.white,
                           textAlignVertical: TextAlignVertical.center,
                           style: const TextStyle(color: Colors.white),
@@ -390,7 +324,7 @@ class _RecipesState extends State<Recipes> {
                           height: 15,
                         ),
                         TextFormField(
-                          controller: recipesDescriptionController,
+                          controller: recipeStore.recipesDescriptionController,
                           cursorColor: Colors.white,
                           style: const TextStyle(color: Colors.white),
                           textAlignVertical: TextAlignVertical.center,
@@ -431,7 +365,7 @@ class _RecipesState extends State<Recipes> {
                           height: 15,
                         ),
                         TextFormField(
-                          controller: recipesImageController,
+                          controller: recipeStore.recipesImageController,
                           cursorColor: Colors.white,
                           style: const TextStyle(color: Colors.white),
                           textAlignVertical: TextAlignVertical.center,
@@ -466,15 +400,9 @@ class _RecipesState extends State<Recipes> {
                           children: [
                             InkWell(
                               onTap: () {
-                                if (existingRecipe == null) {
-                                  //TODO
-                                  insertRecipe(Recipe(name: "teste", description: "teste", imageUrl: "https://i.postimg.cc/rmCrg2jW/images-5.jpg", cId: 1), [1, 2, 3]);
-                                } else {
-                                  //TODO
-                                  editRecipe(Recipe(name: "teste", description: "teste", imageUrl: "https://i.postimg.cc/rmCrg2jW/images-5.jpg", cId: 1), [1, 2, 3]);
-                                }
-                                //TODO
-                                // cleanIngredientForm();
+                                setState(() {
+                                  recipeStore.insertRecipe();
+                                });
                                 Navigator.pop(context);
                               },
                               child: ClipRRect(
@@ -498,8 +426,6 @@ class _RecipesState extends State<Recipes> {
                             if (existingRecipe != null)
                               InkWell(
                                 onTap: () {
-                                  removeRecipe(existingRecipe.id!, [1, 2, 3]);
-                                  cleanRecipeForm();
                                   Navigator.pop(context);
                                 },
                                 child: ClipRRect(
