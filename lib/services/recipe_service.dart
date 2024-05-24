@@ -9,14 +9,26 @@ import 'package:http/http.dart';
 class RecipeService {
   Map<String, String> headers = {'Content-Type': 'application/json'};
 
-  // Future<Ingredient> getIngredient(int id) async {
-  //   var response = http.get(Uri.parse(AppConfig.url + "/get-ingredient"));
-  // }
+  Future<List<Recipe>?> getRecipes() async {
+    try {
+      var response = await http.get(Uri.parse("${AppConfig.url}/recipes"));
+
+      if (response.statusCode == 200) {
+        var decodedList = json.decode(response.body) as List;
+        List<Recipe> recipes = List<Recipe>.from(decodedList.map((r) => Recipe.fromJson(r)));
+        return recipes;
+      }
+      return null;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
 
   Future<Response?> createRecipe(Recipe recipe) async {
     try {
       Response response = await http.post(
-        Uri.parse("${AppConfig.url}recipe"),
+        Uri.parse("${AppConfig.url}/recipe"),
         headers: headers,
         body: json.encode(recipe),
       );

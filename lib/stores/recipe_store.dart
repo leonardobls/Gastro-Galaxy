@@ -10,9 +10,13 @@ class RecipeStore {
   TextEditingController recipesNameController = TextEditingController();
   TextEditingController recipesDescriptionController = TextEditingController();
   TextEditingController recipesImageController = TextEditingController();
-  final List<Recipe> recipes = [];
+  late List<Recipe> recipes = [];
 
   bool isAdding = false;
+
+  Future<List<Recipe>?> load() {
+    return _service.getRecipes();
+  }
 
   Future<bool> insertRecipe() async {
     try {

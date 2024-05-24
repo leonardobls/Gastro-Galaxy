@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gastro_galaxy/components/bottom_bar.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
-import 'package:gastro_galaxy/db/database.dart';
 import 'package:gastro_galaxy/models/recipe.dart';
 import 'package:gastro_galaxy/pages/recipes_detail.dart';
 import 'package:gastro_galaxy/stores/recipe_store.dart';
@@ -98,133 +97,131 @@ class _RecipesState extends State<Recipes> {
             width: double.infinity,
             color: Colors.white,
             child: SingleChildScrollView(
-              child: recipeStore.recipes.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: recipeStore.recipes.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
-                                // height: 120,
-                                width: double.infinity,
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => RecipesDetail(id: recipeStore.recipes[index].id!),
-                                          ),
-                                        );
-                                      },
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(Radius.circular(15)),
-                                        child: SizedBox(
-                                          width: 80,
-                                          height: 80,
-                                          child: Image.network(
-                                            recipeStore.recipes[index].url,
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Expanded(
-                                      child: InkWell(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: FutureBuilder(
+                  future: recipeStore.load(),
+                  builder: (buildContext, snapshot) => snapshot.hasData
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  // height: 120,
+                                  width: double.infinity,
+                                  child: Row(
+                                    children: [
+                                      InkWell(
                                         onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => RecipesDetail(id: recipeStore.recipes[index].id!),
+                                              builder: (context) => RecipesDetail(id: snapshot.data![index].id!),
                                             ),
                                           );
                                         },
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              recipeStore.recipes[index].name,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              recipeStore.recipes[index].description,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          useRootNavigator: true,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(20),
-                                              topRight: Radius.circular(20),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(Radius.circular(15)),
+                                          child: SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: Image.network(
+                                              snapshot.data![index].url ?? "",
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
-                                          backgroundColor: AppStyles.primaryColor,
-                                          builder: (BuildContext context) {
-                                            return editModal(recipeStore.recipes[index]);
-                                          },
-                                        );
-                                      },
-                                      child: SvgPicture.asset(
-                                        "assets/icons/edit.svg",
-                                        width: 25,
-                                        height: 25,
-                                        color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => RecipesDetail(id: snapshot.data![index].id!),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot.data![index].name ?? "",
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                snapshot.data![index].description ?? "",
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            useRootNavigator: true,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                topRight: Radius.circular(20),
+                                              ),
+                                            ),
+                                            backgroundColor: AppStyles.primaryColor,
+                                            builder: (BuildContext context) {
+                                              return editModal(snapshot.data![index]);
+                                            },
+                                          );
+                                        },
+                                        child: SvgPicture.asset(
+                                          "assets/icons/edit.svg",
+                                          width: 25,
+                                          height: 25,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Container(
-                                  height: 1,
-                                  width: double.infinity,
-                                  color: AppStyles.primaryColor,
+                                const SizedBox(
+                                  height: 30,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  : const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Text("Nenhuma receita foi cadastrada."),
-                      ),
-                    ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: Container(
+                                    height: 1,
+                                    width: double.infinity,
+                                    color: AppStyles.primaryColor,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                              ],
+                            );
+                          },
+                        )
+                      : CircularProgressIndicator(),
+                ),
+              ),
             ),
           ),
         ),
@@ -237,9 +234,9 @@ class _RecipesState extends State<Recipes> {
       builder: (BuildContext context, StateSetter setState) {
         if (existingRecipe != null) {
           setState(() {
-            recipeStore.recipesNameController.text = existingRecipe.name;
-            recipeStore.recipesDescriptionController.text = existingRecipe.description;
-            recipeStore.recipesImageController.text = existingRecipe.url;
+            recipeStore.recipesNameController.text = existingRecipe.name ?? "";
+            recipeStore.recipesDescriptionController.text = existingRecipe.description ?? "";
+            recipeStore.recipesImageController.text = existingRecipe.url ?? "";
           });
         }
         return SafeArea(
