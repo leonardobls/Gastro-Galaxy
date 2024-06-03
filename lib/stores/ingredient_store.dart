@@ -11,12 +11,14 @@ class IngredientStore {
   TextEditingController ingredientQuantityController = TextEditingController();
   TextEditingController ingredientImageController = TextEditingController();
   bool isChecked = false;
-  late List<Ingredient> ingredients = [];
+  late List<Ingredient>? ingredients = [];
 
   bool isAdding = false;
 
-  Future<List<Ingredient>?> load() {
-    return _service.getIngredients();
+  Future<List<Ingredient>?> load() async {
+    ingredients = await _service.getIngredients();
+
+    return ingredients;
   }
 
   Future<bool> insertIngredient(Ingredient ingredient) async {

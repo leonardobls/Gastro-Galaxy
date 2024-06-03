@@ -40,6 +40,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   carousel_slider: ^4.2.1
   http: ^1.2.0
+  multi_select_flutter: ^4.1.3
 
 dev_dependencies:
   flutter_test:
@@ -97,6 +98,7 @@ flutter:
     - assets/images/ing-pao.png
     - assets/images/ing-queijo.png
     - assets/images/ing-tomate.png
+    - assets/images/default.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

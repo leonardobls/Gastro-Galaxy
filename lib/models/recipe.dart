@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:gastro_galaxy/models/ingredient.dart';
 
 class Recipe {
   final int? id;
   final String? name;
   final String? description;
+  final String? longDescription;
   final String? url;
   final int? categoryId;
   List<Ingredient>? ingredients;
@@ -14,6 +13,7 @@ class Recipe {
     this.id,
     required this.name,
     required this.description,
+    required this.longDescription,
     required this.url,
     this.categoryId,
   });
@@ -24,6 +24,7 @@ class Recipe {
       name: json['Name'],
       categoryId: json['CategoryId'],
       description: json['Description'],
+      longDescription: json['LongDescription'],
       url: json['Url'],
     );
   }
@@ -34,6 +35,7 @@ class Recipe {
       'name': name,
       'categoryId': categoryId,
       'description': description,
+      'longDescription': longDescription,
       'imageUrl': url,
     };
   }

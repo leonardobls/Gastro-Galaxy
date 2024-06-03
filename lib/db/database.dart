@@ -106,6 +106,7 @@ class Repository {
         name: result[0]['name'] as String,
         categoryId: result[0]['cId'] as int,
         description: result[0]['description'] as String,
+        longDescription: result[0]['description'] as String,
         url: result[0]['imageUrl'] as String,
       );
 
@@ -180,7 +181,13 @@ class Repository {
     if (result.isNotEmpty) {
       for (var row in result) {
         String categoryName = row['cName'];
-        Recipe recipe = Recipe(id: row['rId'], name: row['rName'], description: row['rDescription'], url: row['rImageUrl']);
+        Recipe recipe = Recipe(
+          id: row['rId'],
+          name: row['rName'],
+          description: row['rDescription'],
+          longDescription: row['rDescription'],
+          url: row['rImageUrl'],
+        );
 
         if (recipesByCategory.containsKey(categoryName)) {
           recipesByCategory[categoryName]?.add(recipe);
@@ -204,6 +211,7 @@ class Repository {
           id: row['id'] as int,
           name: row['name'] as String,
           description: row['description'] as String,
+          longDescription: row['description'] as String,
           url: row['imageUrl'] as String,
           categoryId: row['cId'] as int,
         );
