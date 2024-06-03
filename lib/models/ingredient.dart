@@ -15,11 +15,11 @@ class Ingredient {
 
   factory Ingredient.fromJson(Map<String, dynamic> json) {
     return Ingredient(
-      id: json['id'],
-      name: json['name'],
-      amount: json['amount'],
-      imageUrl: json['imageUrl'],
-      isAvailable: json['isAvailable'] == 1 ? true : false,
+      id: json['Id'],
+      name: json['Name'],
+      amount: json['Amount'],
+      imageUrl: json['Url'],
+      isAvailable: json['IsAvailable'] == 1 ? true : false,
     );
   }
 
