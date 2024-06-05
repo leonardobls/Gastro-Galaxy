@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gastro_galaxy/components/bottom_bar.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
+import 'package:gastro_galaxy/pages/profile.dart';
 
 class Menu extends StatefulWidget {
   const Menu({
@@ -53,6 +54,17 @@ class _MenuState extends State<Menu> {
               child: Column(
                 children: [
                   InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          settings: const RouteSettings(name: "/profile"),
+                          pageBuilder: (context, animation1, animation2) => const Profile(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
                     child: SizedBox(
                       height: 100,
                       child: Row(
@@ -70,9 +82,12 @@ class _MenuState extends State<Menu> {
                           const SizedBox(
                             width: 15,
                           ),
-                          Text(
+                          const Text(
                             "Meu Perfil",
-                            style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
