@@ -38,4 +38,18 @@ class IngredientService {
       return null;
     }
   }
+
+  Future<Response?> edit(Ingredient ingredient) async {
+    try {
+      Response response = await http.post(
+        Uri.parse("${AppConfig.url}/ingredient"),
+        headers: headers,
+        body: json.encode(ingredient),
+      );
+      return response;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
 }

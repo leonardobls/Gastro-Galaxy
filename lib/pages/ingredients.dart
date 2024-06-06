@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gastro_galaxy/components/bottom_bar.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
 import 'package:gastro_galaxy/models/ingredient.dart';
 import 'package:gastro_galaxy/stores/ingredient_store.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Ingredients extends StatefulWidget {
   const Ingredients({
@@ -95,7 +100,7 @@ class _IngredientsState extends State<Ingredients> {
             color: Colors.white,
             child: SingleChildScrollView(
                 child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               child: FutureBuilder(
                 future: ingredientStore.load(),
                 builder: (buildContext, snapshot) => snapshot.hasData
@@ -149,10 +154,8 @@ class _IngredientsState extends State<Ingredients> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             snapshot.data![index].name,
@@ -191,16 +194,15 @@ class _IngredientsState extends State<Ingredients> {
   }
 
   Widget editModal(Ingredient? existingIngredient) {
+    ingredientStore.cleanIngredientForm();
+
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
         if (existingIngredient != null) {
           setState(() {
-            ingredientStore.ingredientNameController.text =
-                existingIngredient.name;
-            ingredientStore.ingredientQuantityController.text =
-                existingIngredient.amount;
-            ingredientStore.ingredientImageController.text =
-                existingIngredient.imageUrl;
+            ingredientStore.ingredientNameController.text = existingIngredient.name;
+            ingredientStore.ingredientQuantityController.text = existingIngredient.amount;
+            ingredientStore.ingredientImageController.text = existingIngredient.imageUrl;
             ingredientStore.isChecked = existingIngredient.isAvailable;
           });
         }
@@ -208,250 +210,209 @@ class _IngredientsState extends State<Ingredients> {
           child: SizedBox(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.7,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 40, bottom: 50),
-                  child: Text(
-                    existingIngredient != null
-                        ? "Editar Ingrediente"
-                        : "Adicionar Ingrediente",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40, bottom: 50),
+                    child: Text(
+                      existingIngredient != null ? "Editar Ingrediente" : "Adicionar Ingrediente",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-                Form(
-                  key: ingredientStore.ingredientFormKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Nome do Ingrediente",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextFormField(
-                          controller: ingredientStore.ingredientNameController,
-                          cursorColor: Colors.white,
-                          textAlignVertical: TextAlignVertical.center,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: const InputDecoration(
-                            hintText: "Insira o nome do ingrediente",
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 16,
-                            ),
-                            hintStyle: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, .4),
-                            ),
-                            errorStyle: TextStyle(
-                              fontSize: 0,
-                              height: 0,
+                  Form(
+                    key: ingredientStore.ingredientFormKey,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Nome do Ingrediente",
+                            style: TextStyle(
                               color: Colors.white,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        const Text(
-                          "Quantidade",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextFormField(
-                          controller:
-                              ingredientStore.ingredientQuantityController,
-                          cursorColor: Colors.white,
-                          style: const TextStyle(color: Colors.white),
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: const InputDecoration(
-                            hintText: "Insira a quantidade no estoque",
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 16,
-                            ),
-                            hintStyle: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, .4),
-                            ),
-                            errorStyle: TextStyle(
-                              fontSize: 0,
-                              height: 0,
-                              color: Colors.white,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        const Text(
-                          "Imagem",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextFormField(
-                          controller: ingredientStore.ingredientImageController,
-                          cursorColor: Colors.white,
-                          style: const TextStyle(color: Colors.white),
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: const InputDecoration(
-                            hintText: "Insira a url da imagem",
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 16,
-                            ),
-                            hintStyle: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, .4),
-                            ),
-                            errorStyle: TextStyle(
-                              fontSize: 0,
-                              height: 0,
-                              color: Colors.white,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Este ingrediente está disponível?",
-                              style: TextStyle(
+                          TextFormField(
+                            controller: ingredientStore.ingredientNameController,
+                            cursorColor: Colors.white,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: "Insira o nome do ingrediente",
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 16,
+                              ),
+                              hintStyle: TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, .4),
+                              ),
+                              errorStyle: TextStyle(
+                                fontSize: 0,
+                                height: 0,
                                 color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
                               ),
                             ),
-                            Checkbox(
-                              value: ingredientStore.isChecked,
-                              side: const BorderSide(color: Colors.white),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  if (existingIngredient != null) {
-                                    existingIngredient.isAvailable = newValue!;
-                                  }
-
-                                  ingredientStore.isChecked = newValue!;
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                if (existingIngredient == null) {
-                                  ingredientStore.insertIngredient(
-                                    Ingredient(
-                                      name: ingredientStore
-                                          .ingredientNameController.text,
-                                      amount: ingredientStore
-                                          .ingredientQuantityController.text,
-                                      imageUrl: ingredientStore
-                                          .ingredientImageController.text,
-                                      isAvailable: ingredientStore.isChecked,
-                                    ),
-                                  );
-                                } else {
-                                  ingredientStore.editIngredient(
-                                    Ingredient(
-                                      id: existingIngredient.id,
-                                      name: ingredientStore
-                                          .ingredientNameController.text,
-                                      amount: ingredientStore
-                                          .ingredientQuantityController.text,
-                                      imageUrl: ingredientStore
-                                          .ingredientImageController.text,
-                                      isAvailable: ingredientStore.isChecked,
-                                    ),
-                                  );
-                                }
-                                ingredientStore.cleanIngredientForm();
-                                Navigator.pop(context);
-                              },
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(200),
-                                ),
-                                child: Container(
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Text(
+                            "Quantidade",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          TextFormField(
+                            controller: ingredientStore.ingredientQuantityController,
+                            cursorColor: Colors.white,
+                            style: const TextStyle(color: Colors.white),
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+                              hintText: "Insira a quantidade no estoque",
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 16,
+                              ),
+                              hintStyle: TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, .4),
+                              ),
+                              errorStyle: TextStyle(
+                                fontSize: 0,
+                                height: 0,
+                                color: Colors.white,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Text(
+                            "Imagem",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          TextFormField(
+                            controller: ingredientStore.ingredientImageController,
+                            cursorColor: Colors.white,
+                            style: const TextStyle(color: Colors.white),
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+                              hintText: "Insira a url da imagem",
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 16,
+                              ),
+                              hintStyle: TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, .4),
+                              ),
+                              errorStyle: TextStyle(
+                                fontSize: 0,
+                                height: 0,
+                                color: Colors.white,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Este ingrediente está disponível?",
+                                style: TextStyle(
                                   color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 20),
-                                  child: const Text(
-                                    "SALVAR",
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
-                            if (existingIngredient != null)
+                              Checkbox(
+                                value: ingredientStore.isChecked,
+                                side: const BorderSide(color: Colors.white),
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    if (existingIngredient != null) {
+                                      existingIngredient.isAvailable = newValue!;
+                                    }
+
+                                    ingredientStore.isChecked = newValue!;
+                                  });
+                                },
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
                               InkWell(
-                                onTap: () {
-                                  ingredientStore.removeIngredient(
-                                    Ingredient(
-                                      id: existingIngredient.id,
-                                      name: ingredientStore
-                                          .ingredientNameController.text,
-                                      amount: ingredientStore
-                                          .ingredientQuantityController.text,
-                                      imageUrl: ingredientStore
-                                          .ingredientImageController.text,
-                                      isAvailable: ingredientStore.isChecked,
-                                    ),
-                                  );
+                                onTap: () async {
+                                  if (existingIngredient == null) {
+                                    bool response = await ingredientStore.insertIngredient(
+                                      Ingredient(
+                                        name: ingredientStore.ingredientNameController.text,
+                                        amount: ingredientStore.ingredientQuantityController.text,
+                                        imageUrl: ingredientStore.ingredientImageController.text,
+                                        isAvailable: ingredientStore.isChecked,
+                                      ),
+                                    );
+
+                                    if (response) {
+                                      setState(() {});
+                                    }
+                                  } else {
+                                    ingredientStore.editIngredient(
+                                      Ingredient(
+                                        id: existingIngredient.id,
+                                        name: ingredientStore.ingredientNameController.text,
+                                        amount: ingredientStore.ingredientQuantityController.text,
+                                        imageUrl: ingredientStore.ingredientImageController.text,
+                                        isAvailable: ingredientStore.isChecked,
+                                      ),
+                                    );
+                                  }
                                   ingredientStore.cleanIngredientForm();
                                   Navigator.pop(context);
                                 },
@@ -461,10 +422,9 @@ class _IngredientsState extends State<Ingredients> {
                                   ),
                                   child: Container(
                                     color: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 40, vertical: 20),
+                                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                                     child: const Text(
-                                      "DELETAR",
+                                      "SALVAR",
                                       style: TextStyle(
                                         color: Colors.black87,
                                         fontSize: 16,
@@ -474,13 +434,41 @@ class _IngredientsState extends State<Ingredients> {
                                   ),
                                 ),
                               ),
-                          ],
-                        ),
-                      ],
+                              if (existingIngredient != null)
+                                InkWell(
+                                  onTap: () async {
+                                    var response = await ingredientStore.removeIngredient(existingIngredient.id!);
+                                    if (response.statusCode == 200) {
+                                      ingredientStore.cleanIngredientForm();
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(200),
+                                    ),
+                                    child: Container(
+                                      color: Colors.white,
+                                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                      child: const Text(
+                                        "DELETAR",
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

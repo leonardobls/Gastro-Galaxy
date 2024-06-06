@@ -35,7 +35,7 @@ class IngredientStore {
         ),
       );
 
-      if (response != null && response.statusCode == 200) {
+      if (response != null && response.statusCode == 201) {
         return true;
       } else {
         return false;
@@ -46,23 +46,28 @@ class IngredientStore {
   }
 
   Future<void> editIngredient(Ingredient ingredient) async {
-    Map<String, dynamic> row = {
-      "id": ingredient.id,
-      "name": ingredient.name,
-      "amount": ingredient.amount,
-      "imageUrl": ingredient.imageUrl,
-      "isAvailable": ingredient.isAvailable ? 1 : 0,
-    };
+    // try {
+    //   Response? response = await _service.editIngredient(
+    //     Ingredient(
+    //       name: ingredientNameController.text,
+    //       amount: ingredientQuantityController.text,
+    //       imageUrl: ingredientImageController.text,
+    //       isAvailable: isChecked,
+    //     ),
+    //   );
+
+    //   if (response != null && response.statusCode == 200) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // } catch (e) {
+    //   return false;
+    // }
   }
 
-  Future<void> removeIngredient(Ingredient ingredient) async {
-    Map<String, dynamic> row = {
-      "id": ingredient.id,
-      "name": ingredient.name,
-      "amount": ingredient.amount,
-      "imageUrl": ingredient.imageUrl,
-      "isAvailable": ingredient.isAvailable ? 1 : 0,
-    };
+  Future removeIngredient(int ingredientId) async {
+    // return await _service.deleteIngredient(ingredientId);
   }
 
   Future<void> cleanIngredientForm() async {
