@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gastro_galaxy/config/app_routes.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
 import 'package:gastro_galaxy/db/database.dart';
 import 'package:gastro_galaxy/models/ingredient.dart';
@@ -47,32 +48,14 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    final RouteObserver<PageRoute> routeObserver = RouteObserverWidget();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      onGenerateRoute: (settings) {
-        if (settings.name == "/") {
-          return PageRouteBuilder(
-            transitionDuration: Duration.zero,
-            settings: settings,
-            pageBuilder: (_, __, ___) => const Home(),
-          );
-        } else if (settings.name == "/ingredients") {
-          return PageRouteBuilder(
-            transitionDuration: Duration.zero,
-            settings: settings,
-            pageBuilder: (_, __, ___) => const Ingredients(),
-          );
-        }
-        return PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const Home(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        );
-      },
+      navigatorObservers: [routeObserver],
       routes: {
         '/': (contex) => const Home(),
         '/ingredients': (contex) => const Ingredients(),

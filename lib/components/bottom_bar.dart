@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gastro_galaxy/config/app_styles.dart';
+import 'package:gastro_galaxy/pages/home.dart';
+import 'package:gastro_galaxy/pages/ingredients.dart';
 import 'package:gastro_galaxy/pages/menu.dart';
+import 'package:gastro_galaxy/pages/recipes.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({
@@ -38,9 +41,15 @@ class _BottomBarState extends State<BottomBar> {
               children: [
                 InkWell(
                   onTap: () {
-                    if (ModalRoute.of(context)!.settings.name != "/") {
-                      Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false);
-                    }
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        settings: const RouteSettings(name: "/"),
+                        pageBuilder: (context, animation1, animation2) => const Home(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -64,9 +73,14 @@ class _BottomBarState extends State<BottomBar> {
                 InkWell(
                   onTap: () {
                     if (ModalRoute.of(context)!.settings.name != "/ingredients") {
-                      Navigator.pushNamed(
+                      Navigator.push(
                         context,
-                        '/ingredients',
+                        PageRouteBuilder(
+                          settings: const RouteSettings(name: "/ingredients"),
+                          pageBuilder: (context, animation1, animation2) => const Ingredients(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
                       );
                     }
                   },
@@ -91,12 +105,15 @@ class _BottomBarState extends State<BottomBar> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (ModalRoute.of(context)!.settings.name != "/recipes") {
-                      Navigator.pushNamed(
-                        context,
-                        '/recipes',
-                      );
-                    }
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        settings: const RouteSettings(name: "/recipes"),
+                        pageBuilder: (context, animation1, animation2) => const Recipes(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -122,6 +139,7 @@ class _BottomBarState extends State<BottomBar> {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
+                        settings: const RouteSettings(name: "/menu"),
                         pageBuilder: (context, animation1, animation2) => const Menu(),
                         transitionDuration: const Duration(milliseconds: 200),
                         reverseTransitionDuration: const Duration(milliseconds: 200),
