@@ -15,12 +15,16 @@ class RecipeStore {
   late List<Recipe> recipes = [];
   late Recipe? recipe;
 
+  bool isLoading = false;
+
   Future<List<Recipe>?> loadAll() {
     return _service.getRecipes();
   }
 
   Future<Recipe?> load(int id) async {
+    isLoading = true;
     return await _service.getRecipe(id);
+    isLoading = false;
   }
 
   Future<bool> insertRecipe() async {

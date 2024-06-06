@@ -114,7 +114,8 @@ class _RecipesState extends State<Recipes> {
                             return Column(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
                                   // height: 120,
                                   width: double.infinity,
                                   child: Row(
@@ -124,18 +125,26 @@ class _RecipesState extends State<Recipes> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => RecipesDetail(id: snapshot.data![index].id!),
+                                              builder: (context) =>
+                                                  RecipesDetail(
+                                                      id: snapshot
+                                                          .data![index].id!),
                                             ),
                                           );
                                         },
                                         child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(Radius.circular(15)),
-                                          child: snapshot.data![index].url != null && snapshot.data![index].url!.isNotEmpty
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(15)),
+                                          child: snapshot.data![index].url !=
+                                                      null &&
+                                                  snapshot.data![index].url!
+                                                      .isNotEmpty
                                               ? SizedBox(
                                                   width: 80,
                                                   height: 80,
                                                   child: Image.network(
-                                                    snapshot.data![index].url ?? "",
+                                                    snapshot.data![index].url ??
+                                                        "",
                                                     width: double.infinity,
                                                     height: double.infinity,
                                                     fit: BoxFit.cover,
@@ -145,7 +154,8 @@ class _RecipesState extends State<Recipes> {
                                                   color: Colors.grey,
                                                   width: 80,
                                                   height: 80,
-                                                  child: Image.asset("assets/images/default.png"),
+                                                  child: Image.asset(
+                                                      "assets/images/default.png"),
                                                 ),
                                         ),
                                       ),
@@ -158,15 +168,20 @@ class _RecipesState extends State<Recipes> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => RecipesDetail(id: snapshot.data![index].id!),
+                                                builder: (context) =>
+                                                    RecipesDetail(
+                                                        id: snapshot
+                                                            .data![index].id!),
                                               ),
                                             );
                                           },
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                snapshot.data![index].name ?? "",
+                                                snapshot.data![index].name ??
+                                                    "",
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -175,7 +190,9 @@ class _RecipesState extends State<Recipes> {
                                                 height: 10,
                                               ),
                                               Text(
-                                                snapshot.data![index].description ?? "",
+                                                snapshot.data![index]
+                                                        .description ??
+                                                    "",
                                               ),
                                             ],
                                           ),
@@ -196,9 +213,11 @@ class _RecipesState extends State<Recipes> {
                                                 topRight: Radius.circular(20),
                                               ),
                                             ),
-                                            backgroundColor: AppStyles.primaryColor,
+                                            backgroundColor:
+                                                AppStyles.primaryColor,
                                             builder: (BuildContext context) {
-                                              return editModal(snapshot.data![index]);
+                                              return editModal(
+                                                  snapshot.data![index]);
                                             },
                                           );
                                         },
@@ -216,7 +235,8 @@ class _RecipesState extends State<Recipes> {
                                   height: 30,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
                                   child: Container(
                                     height: 1,
                                     width: double.infinity,
@@ -230,11 +250,224 @@ class _RecipesState extends State<Recipes> {
                             );
                           },
                         )
-                      : SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: const Center(child: CircularProgressIndicator()),
-                        ),
+                      : recipeStore.isLoading
+                          ? SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: const Center(
+                                  child: CircularProgressIndicator()),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 40),
+                              child: FutureBuilder(
+                                future: recipeStore.loadAll(),
+                                builder: (buildContext, snapshot) => snapshot
+                                        .hasData
+                                    ? ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: snapshot.data!.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return Column(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15),
+                                                // height: 120,
+                                                width: double.infinity,
+                                                child: Row(
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RecipesDetail(
+                                                                    id: snapshot
+                                                                        .data![
+                                                                            index]
+                                                                        .id!),
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    15)),
+                                                        child: snapshot
+                                                                        .data![
+                                                                            index]
+                                                                        .url !=
+                                                                    null &&
+                                                                snapshot
+                                                                    .data![
+                                                                        index]
+                                                                    .url!
+                                                                    .isNotEmpty
+                                                            ? SizedBox(
+                                                                width: 80,
+                                                                height: 80,
+                                                                child: Image
+                                                                    .network(
+                                                                  snapshot
+                                                                          .data![
+                                                                              index]
+                                                                          .url ??
+                                                                      "",
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: double
+                                                                      .infinity,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                color:
+                                                                    Colors.grey,
+                                                                width: 80,
+                                                                height: 80,
+                                                                child: Image.asset(
+                                                                    "assets/images/default.png"),
+                                                              ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 15,
+                                                    ),
+                                                    Expanded(
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RecipesDetail(
+                                                                      id: snapshot
+                                                                          .data![
+                                                                              index]
+                                                                          .id!),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .name ??
+                                                                  "",
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .description ??
+                                                                  "",
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        showModalBottomSheet(
+                                                          context: context,
+                                                          isScrollControlled:
+                                                              true,
+                                                          useRootNavigator:
+                                                              true,
+                                                          shape:
+                                                              const RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              topLeft: Radius
+                                                                  .circular(20),
+                                                              topRight: Radius
+                                                                  .circular(20),
+                                                            ),
+                                                          ),
+                                                          backgroundColor:
+                                                              AppStyles
+                                                                  .primaryColor,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return editModal(
+                                                                snapshot.data![
+                                                                    index]);
+                                                          },
+                                                        );
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        "assets/icons/edit.svg",
+                                                        width: 25,
+                                                        height: 25,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20),
+                                                child: Container(
+                                                  height: 1,
+                                                  width: double.infinity,
+                                                  color: AppStyles.primaryColor,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : recipeStore.isLoading
+                                        ? SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.5,
+                                            child: const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          )
+                                        : Center(
+                                            child: Text("Nenhuma receita encontrada"),
+                                          ),
+                              ),
+                            ),
                 ),
               ),
             ),
@@ -250,7 +483,8 @@ class _RecipesState extends State<Recipes> {
         if (existingRecipe != null) {
           setState(() {
             recipeStore.recipesNameController.text = existingRecipe.name ?? "";
-            recipeStore.recipesDescriptionController.text = existingRecipe.description ?? "";
+            recipeStore.recipesDescriptionController.text =
+                existingRecipe.description ?? "";
             recipeStore.recipesImageController.text = existingRecipe.url ?? "";
           });
         }
@@ -270,7 +504,9 @@ class _RecipesState extends State<Recipes> {
                               bottom: 50,
                             ),
                             child: Text(
-                              existingRecipe != null ? "Editar Receita" : "Adicionar Receita",
+                              existingRecipe != null
+                                  ? "Editar Receita"
+                                  : "Adicionar Receita",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -299,7 +535,8 @@ class _RecipesState extends State<Recipes> {
                                     height: 15,
                                   ),
                                   TextFormField(
-                                    controller: recipeStore.recipesNameController,
+                                    controller:
+                                        recipeStore.recipesNameController,
                                     cursorColor: Colors.white,
                                     textAlignVertical: TextAlignVertical.center,
                                     style: const TextStyle(color: Colors.white),
@@ -310,7 +547,8 @@ class _RecipesState extends State<Recipes> {
                                         horizontal: 16,
                                       ),
                                       hintStyle: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, .4),
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, .4),
                                       ),
                                       errorStyle: TextStyle(
                                         fontSize: 0,
@@ -318,10 +556,12 @@ class _RecipesState extends State<Recipes> {
                                         color: Colors.white,
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -341,7 +581,8 @@ class _RecipesState extends State<Recipes> {
                                   ),
                                   TextFormField(
                                     maxLines: 5,
-                                    controller: recipeStore.recipesDescriptionController,
+                                    controller: recipeStore
+                                        .recipesDescriptionController,
                                     cursorColor: Colors.white,
                                     style: const TextStyle(color: Colors.white),
                                     textAlignVertical: TextAlignVertical.center,
@@ -352,7 +593,8 @@ class _RecipesState extends State<Recipes> {
                                         horizontal: 16,
                                       ),
                                       hintStyle: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, .4),
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, .4),
                                       ),
                                       errorStyle: TextStyle(
                                         fontSize: 0,
@@ -360,10 +602,12 @@ class _RecipesState extends State<Recipes> {
                                         color: Colors.white,
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -383,18 +627,21 @@ class _RecipesState extends State<Recipes> {
                                   ),
                                   TextFormField(
                                     maxLines: 10,
-                                    controller: recipeStore.recipesDescriptionController,
+                                    controller: recipeStore
+                                        .recipesDescriptionController,
                                     cursorColor: Colors.white,
                                     style: const TextStyle(color: Colors.white),
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: const InputDecoration(
-                                      hintText: "Insira uma descrição longa (Ex: receita, modo de preparo, mais informações.)",
+                                      hintText:
+                                          "Insira uma descrição longa (Ex: receita, modo de preparo, mais informações.)",
                                       contentPadding: EdgeInsets.symmetric(
                                         vertical: 16,
                                         horizontal: 16,
                                       ),
                                       hintStyle: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, .4),
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, .4),
                                       ),
                                       errorStyle: TextStyle(
                                         fontSize: 0,
@@ -402,10 +649,12 @@ class _RecipesState extends State<Recipes> {
                                         color: Colors.white,
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -424,7 +673,8 @@ class _RecipesState extends State<Recipes> {
                                     height: 15,
                                   ),
                                   TextFormField(
-                                    controller: recipeStore.recipesImageController,
+                                    controller:
+                                        recipeStore.recipesImageController,
                                     cursorColor: Colors.white,
                                     style: const TextStyle(color: Colors.white),
                                     textAlignVertical: TextAlignVertical.center,
@@ -435,7 +685,8 @@ class _RecipesState extends State<Recipes> {
                                         horizontal: 16,
                                       ),
                                       hintStyle: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, .4),
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, .4),
                                       ),
                                       errorStyle: TextStyle(
                                         fontSize: 0,
@@ -443,10 +694,12 @@ class _RecipesState extends State<Recipes> {
                                         color: Colors.white,
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -465,7 +718,11 @@ class _RecipesState extends State<Recipes> {
                                     height: 15,
                                   ),
                                   MultiSelectDialogField(
-                                    items: ingredientStore.ingredients!.map((animal) => MultiSelectItem<Ingredient>(animal, animal.name)).toList(),
+                                    items: ingredientStore.ingredients!
+                                        .map((animal) =>
+                                            MultiSelectItem<Ingredient>(
+                                                animal, animal.name))
+                                        .toList(),
                                     title: const Text("Ingredientes"),
                                     selectedColor: Colors.black,
                                     decoration: BoxDecoration(
@@ -484,13 +741,15 @@ class _RecipesState extends State<Recipes> {
                                     buttonText: const Text(
                                       "Selecione os Ingredientes",
                                       style: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, .4),
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, .4),
                                         fontSize: 16,
                                       ),
                                     ),
                                     cancelText: const Text(
                                       "Cancelar",
-                                      style: TextStyle(color: Colors.black, fontSize: 16),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
                                     ),
                                     onConfirm: (results) {
                                       recipeStore.markedIngredients = results;
@@ -498,8 +757,10 @@ class _RecipesState extends State<Recipes> {
                                   ),
                                   const SizedBox(height: 50),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       InkWell(
                                         onTap: () {
@@ -521,7 +782,8 @@ class _RecipesState extends State<Recipes> {
                                           ),
                                           child: Container(
                                             color: Colors.white,
-                                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 30, vertical: 15),
                                             child: const Text(
                                               "SALVAR",
                                               style: TextStyle(
@@ -539,12 +801,16 @@ class _RecipesState extends State<Recipes> {
                                             Navigator.pop(context);
                                           },
                                           child: ClipRRect(
-                                            borderRadius: const BorderRadius.all(
+                                            borderRadius:
+                                                const BorderRadius.all(
                                               Radius.circular(200),
                                             ),
                                             child: Container(
                                               color: Colors.white,
-                                              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 30,
+                                                      vertical: 15),
                                               child: const Text(
                                                 "DELETAR",
                                                 style: TextStyle(
