@@ -149,8 +149,10 @@ class _IngredientsState extends State<Ingredients> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             snapshot.data![index].name,
@@ -177,7 +179,9 @@ class _IngredientsState extends State<Ingredients> {
                           ),
                         ),
                       )
-                    : CircularProgressIndicator(),
+                    : ingredientStore.isLoading
+                        ? CircularProgressIndicator()
+                        : Text('Nenhum ingrediente cadastrado'),
               ),
             )),
           ),
@@ -191,9 +195,12 @@ class _IngredientsState extends State<Ingredients> {
       builder: (BuildContext context, StateSetter setState) {
         if (existingIngredient != null) {
           setState(() {
-            ingredientStore.ingredientNameController.text = existingIngredient.name;
-            ingredientStore.ingredientQuantityController.text = existingIngredient.amount;
-            ingredientStore.ingredientImageController.text = existingIngredient.imageUrl;
+            ingredientStore.ingredientNameController.text =
+                existingIngredient.name;
+            ingredientStore.ingredientQuantityController.text =
+                existingIngredient.amount;
+            ingredientStore.ingredientImageController.text =
+                existingIngredient.imageUrl;
             ingredientStore.isChecked = existingIngredient.isAvailable;
           });
         }
@@ -206,7 +213,9 @@ class _IngredientsState extends State<Ingredients> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40, bottom: 50),
                   child: Text(
-                    existingIngredient != null ? "Editar Ingrediente" : "Adicionar Ingrediente",
+                    existingIngredient != null
+                        ? "Editar Ingrediente"
+                        : "Adicionar Ingrediente",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -274,7 +283,8 @@ class _IngredientsState extends State<Ingredients> {
                           height: 15,
                         ),
                         TextFormField(
-                          controller: ingredientStore.ingredientQuantityController,
+                          controller:
+                              ingredientStore.ingredientQuantityController,
                           cursorColor: Colors.white,
                           style: const TextStyle(color: Colors.white),
                           textAlignVertical: TextAlignVertical.center,
@@ -382,9 +392,12 @@ class _IngredientsState extends State<Ingredients> {
                                 if (existingIngredient == null) {
                                   ingredientStore.insertIngredient(
                                     Ingredient(
-                                      name: ingredientStore.ingredientNameController.text,
-                                      amount: ingredientStore.ingredientQuantityController.text,
-                                      imageUrl: ingredientStore.ingredientImageController.text,
+                                      name: ingredientStore
+                                          .ingredientNameController.text,
+                                      amount: ingredientStore
+                                          .ingredientQuantityController.text,
+                                      imageUrl: ingredientStore
+                                          .ingredientImageController.text,
                                       isAvailable: ingredientStore.isChecked,
                                     ),
                                   );
@@ -392,9 +405,12 @@ class _IngredientsState extends State<Ingredients> {
                                   ingredientStore.editIngredient(
                                     Ingredient(
                                       id: existingIngredient.id,
-                                      name: ingredientStore.ingredientNameController.text,
-                                      amount: ingredientStore.ingredientQuantityController.text,
-                                      imageUrl: ingredientStore.ingredientImageController.text,
+                                      name: ingredientStore
+                                          .ingredientNameController.text,
+                                      amount: ingredientStore
+                                          .ingredientQuantityController.text,
+                                      imageUrl: ingredientStore
+                                          .ingredientImageController.text,
                                       isAvailable: ingredientStore.isChecked,
                                     ),
                                   );
@@ -408,7 +424,8 @@ class _IngredientsState extends State<Ingredients> {
                                 ),
                                 child: Container(
                                   color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 20),
                                   child: const Text(
                                     "SALVAR",
                                     style: TextStyle(
@@ -426,9 +443,12 @@ class _IngredientsState extends State<Ingredients> {
                                   ingredientStore.removeIngredient(
                                     Ingredient(
                                       id: existingIngredient.id,
-                                      name: ingredientStore.ingredientNameController.text,
-                                      amount: ingredientStore.ingredientQuantityController.text,
-                                      imageUrl: ingredientStore.ingredientImageController.text,
+                                      name: ingredientStore
+                                          .ingredientNameController.text,
+                                      amount: ingredientStore
+                                          .ingredientQuantityController.text,
+                                      imageUrl: ingredientStore
+                                          .ingredientImageController.text,
                                       isAvailable: ingredientStore.isChecked,
                                     ),
                                   );
@@ -441,7 +461,8 @@ class _IngredientsState extends State<Ingredients> {
                                   ),
                                   child: Container(
                                     color: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40, vertical: 20),
                                     child: const Text(
                                       "DELETAR",
                                       style: TextStyle(

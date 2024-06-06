@@ -15,12 +15,16 @@ class RecipeStore {
   late List<Recipe> recipes = [];
   late Recipe? recipe;
 
+  bool isLoading = false;
+
   Future<List<Recipe>?> loadAll() {
     return _service.getRecipes();
   }
 
   Future<Recipe?> load(int id) async {
+    isLoading = true;
     return await _service.getRecipe(id);
+    isLoading = false;
   }
 
   Future<bool> insertRecipe() async {
@@ -47,15 +51,16 @@ class RecipeStore {
 
   Future<bool> updateRecipe() async {
     try {
-      Response? response = await _service.createRecipe(
-        Recipe(
+      recipe = Recipe(
           name: recipesNameController.text,
           description: recipesDescriptionController.text,
           longDescription: recipesDescriptionController.text,
           url: recipesImageController.text,
-          categoryId: 1,
-        ),
-      );
+          categoryId: 1);
+
+      recipe!.ingredients = markedIngredients;
+
+      Response? response = await _service.editRecipe(recipe!);
 
       if (response != null && response.statusCode == 200) {
         return true;
