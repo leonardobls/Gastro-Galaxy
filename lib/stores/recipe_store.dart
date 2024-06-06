@@ -51,15 +51,16 @@ class RecipeStore {
 
   Future<bool> updateRecipe() async {
     try {
-      Response? response = await _service.createRecipe(
-        Recipe(
+      recipe = Recipe(
           name: recipesNameController.text,
           description: recipesDescriptionController.text,
           longDescription: recipesDescriptionController.text,
           url: recipesImageController.text,
-          categoryId: 1,
-        ),
-      );
+          categoryId: 1);
+
+      recipe!.ingredients = markedIngredients;
+
+      Response? response = await _service.editRecipe(recipe!);
 
       if (response != null && response.statusCode == 200) {
         return true;

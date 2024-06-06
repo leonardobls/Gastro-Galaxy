@@ -58,4 +58,26 @@ class RecipeService {
       return null;
     }
   }
+
+  Future<Response?> editRecipe(Recipe recipe) async {
+    try {
+      Response response = await http.put(
+        Uri.parse(("${AppConfig.url}/recipe/${recipe.id}")),
+        headers: headers,
+        body: {
+          "categoryId": recipe.categoryId,
+          "name": recipe.name,
+          "description": recipe.description,
+          "longDescription": recipe.longDescription,
+          "url": recipe.url,
+          "ingredientIds": recipe.ingredients != null ? recipe.ingredients?.map((ingredient) => ingredient.id) : []
+        }
+      );
+
+      return response;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
 }
